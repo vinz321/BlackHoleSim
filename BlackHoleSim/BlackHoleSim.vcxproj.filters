@@ -32,6 +32,9 @@
     <ClCompile Include="ray.cpp">
       <Filter>Source\Geometries</Filter>
     </ClCompile>
+    <ClCompile Include="structs.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kernel.h">
