@@ -11,7 +11,7 @@ __host__ __device__ float operator* (const vec3& x, const vec3& y) {
 		x.y * y.y +
 		x.z * y.z;
 }
-__host__ __device__ vec3 operator* (const vec3& x, const float& y) {
+__host__ __device__ vec3 operator* (const float& y, const vec3& x) {
 	return vec3{ x.x * y,x.y * y, x.z * y, };
 }
 
