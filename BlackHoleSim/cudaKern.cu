@@ -70,6 +70,23 @@ Mat calc_gravity_field() {
 	return test;
 }
 
+void render() {
+	vec3 lfrom{ 0.0f, 0.0f, -1.0f };
+	vec3 lat{ 0.0f, 0.0f, 1.0f };
+	vec3 vup{ 0.0f, 1.0f, 0.0f };
+	float vfov = 60;
+	float aspect = 16 / 9;
+	camera cam(lfrom, lat, vup, vfov, aspect);
+	camera *cam_gpu;
+
+	cudaMalloc(&cam_gpu, sizeof(camera));
+	cudaMemcpyAsync(cam_gpu, cam, sizeof(camera), cudaMemcpyHostToDevice);
+
+	render <<<grid_size, block_size>>>(img, max_x, max_y, cam);
+
+	cudaDeviceSynchronize();
+}
+
 int add_bi(int a, int b) {
 	return a + b;
 }

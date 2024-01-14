@@ -90,11 +90,13 @@
     <ClCompile Include="structs.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="cudaKern.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="kernel.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="tracing.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

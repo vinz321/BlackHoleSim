@@ -29,3 +29,7 @@ __host__ __device__ vec3 operator/ (const vec3& x, const float& y) {
 __host__ __device__ vec3 norm(const vec3 & v) {
 	return v / sqrtf(v * v);
 }
+
+__host__ __device__ vec3 cross(const vec3& x, const vec3& y) {
+	return vec3{ x.y * y.z - x.z * y.y, -(x.x * y.z - x.z * y.x), x.x * y.y - x.y * y.x };
+}

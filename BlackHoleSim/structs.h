@@ -24,3 +24,4 @@ __host__ __device__ vec3 operator* (const float& y, const vec3& x);
 __host__ __device__ vec3 operator- (const vec3& x, const vec3& y);
 __host__ __device__ vec3 operator/ (const vec3& x, const float& y);
 __host__ __device__ vec3 norm(const vec3& v);
+__host__ __device__ vec3 cross(const vec3& x, const vec3& y);
