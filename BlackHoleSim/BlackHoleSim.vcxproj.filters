@@ -21,6 +21,9 @@
     <CudaCompile Include="cudaKern.cu">
       <Filter>Source</Filter>
     </CudaCompile>
+    <CudaCompile Include="tracing.cu">
+      <Filter>Source</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
