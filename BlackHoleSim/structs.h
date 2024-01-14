@@ -20,6 +20,7 @@ typedef struct _color {
 
 __host__ __device__ vec3 operator+ (const vec3& x, const vec3& y);
 __host__ __device__ float operator* (const vec3& x, const vec3& y);
+__host__ __device__ vec3 operator* (const vec3& x, const float& y);
 __host__ __device__ vec3 operator- (const vec3& x, const vec3& y);
 __host__ __device__ vec3 operator/ (const vec3& x, const float& y);
 __host__ __device__ vec3 norm(const vec3& v);
