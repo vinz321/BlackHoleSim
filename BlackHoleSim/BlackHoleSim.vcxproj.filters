@@ -7,6 +7,12 @@
     <Filter Include="Header">
       <UniqueIdentifier>{7a608a18-cf2c-4d9b-9734-f2ef74cce504}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\Geometries">
+      <UniqueIdentifier>{fba5bff4-faee-4d62-8857-b45d1a59c429}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Geometries">
+      <UniqueIdentifier>{00c40a2c-1ebc-467d-b483-68d71a730fb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="kernel.cu">
@@ -20,6 +26,12 @@
     <ClCompile Include="main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="sphere.cpp">
+      <Filter>Source\Geometries</Filter>
+    </ClCompile>
+    <ClCompile Include="ray.cpp">
+      <Filter>Source\Geometries</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kernel.h">
@@ -27,6 +39,15 @@
     </ClInclude>
     <ClInclude Include="cudaKern.h">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>Header\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="structs.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ray.h">
+      <Filter>Header\Geometries</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
