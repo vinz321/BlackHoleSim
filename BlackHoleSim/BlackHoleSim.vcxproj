@@ -81,6 +81,7 @@
   <ItemGroup>
     <CudaCompile Include="cudaKern.cu" />
     <CudaCompile Include="kernel.cu" />
+    <CudaCompile Include="tracing.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
