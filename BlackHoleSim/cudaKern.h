@@ -5,4 +5,6 @@ __global__ void _gravity_field(cv::cuda::PtrStepSz<vec3> ptr);
 
 cv::Mat calc_gravity_field();
 
+cv::Mat renderize();
+
 int add_bi(int a, int b);

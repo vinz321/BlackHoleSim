@@ -6,10 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BlackHoleSim", "BlackHoleSim\BlackHoleSim.vcxproj", "{B782ECF5-6BC0-4E1D-9062-29920250A616}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D105DE83-5E95-4163-AABC-45A3858D52D4}"
-	ProjectSection(SolutionItems) = preProject
-		BlackHoleSim\cudaKern.cu = BlackHoleSim\cudaKern.cu
-		BlackHoleSim\cudaKern.h = BlackHoleSim\cudaKern.h
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

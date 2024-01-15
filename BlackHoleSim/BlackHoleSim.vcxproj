@@ -86,15 +86,15 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="cudaKern.cu" />
-    <CudaCompile Include="kernel.cu" />
-    <CudaCompile Include="tracing.cu" />
+    <CudaCompile Include="cudaKern1.cu" />
+    <CudaCompile Include="kernel1.cu" />
+    <CudaCompile Include="ray1.cu" />
+    <CudaCompile Include="sphere1.cu" />
+    <CudaCompile Include="structs1.cu" />
+    <CudaCompile Include="tracing1.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ray.cpp" />
-    <ClCompile Include="sphere.cpp" />
-    <ClCompile Include="structs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />

@@ -6,27 +6,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="kernel.cu">
+    <CudaCompile Include="tracing1.cu">
       <Filter>Source</Filter>
     </CudaCompile>
-    <CudaCompile Include="cudaKern.cu">
+    <CudaCompile Include="cudaKern1.cu">
       <Filter>Source</Filter>
     </CudaCompile>
-    <CudaCompile Include="tracing.cu">
+    <CudaCompile Include="kernel1.cu">
+      <Filter>Source</Filter>
+    </CudaCompile>
+    <CudaCompile Include="ray1.cu">
+      <Filter>Source</Filter>
+    </CudaCompile>
+    <CudaCompile Include="sphere1.cu">
+      <Filter>Source</Filter>
+    </CudaCompile>
+    <CudaCompile Include="structs1.cu">
       <Filter>Source</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="structs.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="sphere.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="ray.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
