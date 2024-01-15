@@ -71,19 +71,13 @@ Mat calc_gravity_field() {
 }
 
 void render() {
-	vec3 lfrom{ 0.0f, 0.0f, -1.0f };
-	vec3 lat{ 0.0f, 0.0f, 1.0f };
-	vec3 vup{ 0.0f, 1.0f, 0.0f };
-	float vfov = 60;
-	float aspect = 16 / 9;
-	camera cam(lfrom, lat, vup, vfov, aspect);
-	camera *cam_gpu;
-
-	cudaMalloc(&cam_gpu, sizeof(camera));
-	cudaMemcpyAsync(cam_gpu, cam, sizeof(camera), cudaMemcpyHostToDevice);
-
-	render <<<grid_size, block_size>>>(img, max_x, max_y, cam);
-
+	camera* cam;
+	vec3** img;
+	int x = 256;
+	int y = 256;
+	cudaMalloc(&cam, sizeof(camera));
+	cudaMalloc(&img, 256*256*sizeof(camera));
+	render <<<1, 256*256>>>(img, x, y, cam);
 	cudaDeviceSynchronize();
 }
 
