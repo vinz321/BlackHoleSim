@@ -5,6 +5,6 @@
 #include "structs.h"
 #include "camera.h"
 
-__global__ void render(vec3* img, int max_x, int max_y, camera* cam);
+__global__ void render(cv::cuda::PtrStepSz<vec3> img, int max_x, int max_y, camera* cam);
 
 __device__ vec3 px_color(ray& r);

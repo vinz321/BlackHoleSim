@@ -1,4 +1,3 @@
-
 #include "cudaKern.h"
 
 using namespace std;
@@ -50,8 +49,6 @@ Mat calc_gravity_field() {
 	Mat3f test(256, 256);
 	test.setTo(Vec3f(0, .5f, 1));
 
-
-
 	GpuMat t_gpu;
 	t_gpu.upload(test);
 
@@ -72,38 +69,24 @@ Mat calc_gravity_field() {
 }
 
 Mat renderize() {
+	int x = 256;
+	int y = 256;
 	camera* cam;
-	vec3* d_img;
-	vec3* h_img;
-	float* img;
-	int x = 32;
-	int y = 32;
-	const int dim[3] = { x, y, 3 };
+	Mat3f frame(x, y);
+	GpuMat t_gpu;
+	
+	frame.setTo(Vec3f(0,0,0));
+	t_gpu.upload(frame);
 
-	cudaMallocHost(&h_img, x * y * sizeof(vec3));
-	cudaMalloc(&cam, sizeof(camera));
-	cudaMalloc(&d_img, x * y * sizeof(vec3));
+	dim3 grid_size(8, 8);
+	dim3 block_size(32, 32);
 
-	render << <1, x* y >> > (d_img, x, y, cam);
+	render << <grid_size, block_size >> > (t_gpu, x, y, cam);
 	cudaDeviceSynchronize();
-	cudaMemcpy(h_img, d_img, x * y * sizeof(vec3), cudaMemcpyDeviceToHost);
+	printf(cudaGetErrorString(cudaGetLastError()));
 
-	img = (float*)malloc(x * y * 3 * sizeof(float));
-	/*for (int i = 0; i < y; i++) {
-		img[i] = (float*)malloc(x * 3 * sizeof(float));
-	}*/
-
-	for (int i = 0; i < x; i++) {
-		for (int j = 0; j < y; j++) {
-			cout << "i = " << i << "and j = " << j << endl;
-			cout << h_img[j * x + i].z << endl;
-			img[j * x + i] = h_img[j * x + i].x;
-			img[j * x + i + 1] = h_img[j * x + i].y;
-			img[j * x + i + 2] = h_img[j * x + i].z;
-		}
-	}
-	Mat frame(x, y, CV_32F, img, x*sizeof(float));
-	std::cout << frame << std::endl;
+	t_gpu.download(frame);
+	//std::cout << frame << std::endl;
 
 	return frame;
 }
