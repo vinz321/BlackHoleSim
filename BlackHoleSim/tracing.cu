@@ -3,7 +3,7 @@
 
 __device__ vec3_t color(ray r) {
     if (r.hit_sphere(sphere(vec3_t{ 0.0f, 0.0f, 0.0f }, 0.5)))
-        return vec3_t{ 1.0f, 0.0f, 0.0f };
+        return vec3_t{ 0.0f, 0.0f, 0.0f };
     vec3_t unit_direction = norm(r.get_dir());
     float t = 0.5f * (unit_direction.y + 1.0f);
     return (1.0f - t) * vec3_t{1.0, 1.0, 1.0} + t * vec3_t{ 0.5, 0.7, 1.0 };    
