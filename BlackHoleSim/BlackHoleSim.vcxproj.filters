@@ -15,34 +15,29 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="kernel.cu">
-      <Filter>Source</Filter>
-    </CudaCompile>
     <CudaCompile Include="cudaKern.cu">
       <Filter>Source</Filter>
     </CudaCompile>
     <CudaCompile Include="tracing.cu">
       <Filter>Source</Filter>
     </CudaCompile>
+    <CudaCompile Include="structs.cu">
+      <Filter>Source</Filter>
+    </CudaCompile>
+    <CudaCompile Include="main.cu">
+      <Filter>Source</Filter>
+    </CudaCompile>
+    <CudaCompile Include="camera.cu">
+      <Filter>Source</Filter>
+    </CudaCompile>
+    <CudaCompile Include="ray.cu">
+      <Filter>Source\Geometries</Filter>
+    </CudaCompile>
+    <CudaCompile Include="sphere.cu">
+      <Filter>Source\Geometries</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="sphere.cpp">
-      <Filter>Source\Geometries</Filter>
-    </ClCompile>
-    <ClCompile Include="ray.cpp">
-      <Filter>Source\Geometries</Filter>
-    </ClCompile>
-    <ClCompile Include="structs.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="kernel.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="cudaKern.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -54,6 +49,12 @@
     </ClInclude>
     <ClInclude Include="ray.h">
       <Filter>Header\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="tracing.h">
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

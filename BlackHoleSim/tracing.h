@@ -1,10 +1,16 @@
-#include "ray.h"
-#include "sphere.h"
+#pragma once
+
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
+#include "ray.h"
+#include "sphere.h"
+#include <opencv2/core/cuda.hpp>
+
 #include "structs.h"
 #include "camera.h"
 
-__global__ void render(vec3* img, int max_x, int max_y, camera** cam);
+__device__ vec3_t color(ray r);
 
-__device__ vec3 color(ray& r);
+__global__ void render(cv::cuda::PtrStepSz<vec3_t> img, int max_x, int max_y, camera *cam);
+
+cv::Mat3f renderScene();

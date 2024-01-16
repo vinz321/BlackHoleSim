@@ -1,6 +1,6 @@
 #include "sphere.h"
 
-__host__ __device__ bool sphere::is_inside(vec3 point) {
+__host__ __device__ bool sphere::is_inside(vec3_t point) {
 	float a, b, c;
 	a = origin.x - point.x;
 	b = origin.y - point.y;
