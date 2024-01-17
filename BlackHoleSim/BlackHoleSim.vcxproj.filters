@@ -59,5 +59,8 @@
     <ClInclude Include="object.h">
       <Filter>Header\Geometries</Filter>
     </ClInclude>
+    <ClInclude Include="test_head.h">
+      <Filter>Header\Geometries</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

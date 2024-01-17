@@ -113,6 +113,7 @@
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="cudaKern.h" />
+    <ClInclude Include="test_head.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="structs.h" />

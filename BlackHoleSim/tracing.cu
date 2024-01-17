@@ -40,17 +40,12 @@ sphere** createScene() {
     scene[1] = sphere(vec3_t{1,0,0}, 0.2f).allocGPU();
 
     cudaMalloc(&scene_gpu, sizeof(sphere*) * size);
-
     cudaMemcpy(scene_gpu, scene, sizeof(sphere*) * size, cudaMemcpyHostToDevice);
-
-    
-
-
     return scene_gpu;
 }
 
 cv::Mat3f renderScene() {
-    cv::Mat3f img(512, 512);
+    cv::Mat3f img(64, 64);
     img.setTo(cv::Vec3f(0,0,0));
 
     cv::cuda::GpuMat gpu_img;
@@ -58,7 +53,7 @@ cv::Mat3f renderScene() {
     gpu_img.upload(img);
 
     dim3 grid_size(16,16);
-    dim3 block_size(32,32);
+    dim3 block_size(4,4);
     camera cam(vec3_t{ 0,0,-2 }, vec3_t{ 0,0,1 }, vec3_t{ 0,1,0 }, 60, 1);
 
     camera *cam_gpu;
@@ -71,12 +66,12 @@ cv::Mat3f renderScene() {
     //cudaMalloc(&scene, sizeof(object) * 2);
     
 
-    render <<<grid_size, block_size >>> (gpu_img, 512, 512, cam_gpu, scene, 2);
+    render <<<grid_size, block_size >>> (gpu_img, 64, 64, cam_gpu, scene, 2);
 
 
     cudaDeviceSynchronize();
     printf("%s \n", cudaGetErrorString(cudaGetLastError()));
-    //gpu_img.download(img);
+    gpu_img.download(img);
 
     return img;
 }
