@@ -18,12 +18,48 @@ public:
 		return (a * a - b) >= 0;
 	}
 
-	__device__ bool march(object *obj_ls, int count) {
+	__device__ bool test_func(vec3_t* test) {
+		int a = 1 + 2;
+
+		
+	}
+
+	__device__ vec3_t march(sphere **obj_ls, int count) {
 		vec3_t next_orig;
+		vec3_t color = {1,1,1};
+
+
+		//bool test;
 		for (int i = 0; i < n_seg; i++) {
 			next_orig = orig + delta * dir;
 
+
+			for (int j = 0; j < count; j++) {
+
+				/*float a, b, c;
+				a = obj_ls[j]->get_origin().x - next_orig.x;
+				b = obj_ls[j]->get_origin().y - next_orig.y;
+				c = obj_ls[j]->get_origin().z - next_orig.z;
+
+				if ((a * a + b * b + c * c) > obj_ls[j]->get_radius_sqr())
+					test=false;
+				else {
+					color = vec3_t{ 0,0,0 };
+					test = true;
+				}*/
+				
+				if (obj_ls[j]->is_inside(next_orig, &color)) {
+				//if(test){
+					//*test_pointer = { .1f,.1f,1 };
+					test_func(&color);
+					goto endLoop;
+				}
+					
+			}
+			orig = next_orig;
 		}
+		endLoop:
+		return color;
 	}
 
 private:

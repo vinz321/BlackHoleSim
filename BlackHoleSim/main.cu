@@ -17,7 +17,15 @@ __global__ void test_kern() {
 int main() {
 	vec3_t test = { 1,2,3 };
 	test = test + test;
+
+	std::cout << sizeof(object)<< std::endl;
+
+	std::cout << sizeof(sphere) << std::endl;
+
+	std::cout << sizeof(object*) << std::endl;
 	//cv::Mat3f m = calc_gravity_field();
+
+
 	cv::Mat m = renderScene();
 	cv::cvtColor(m, m, cv::COLOR_RGB2BGR);
 	//std::cout << m << std::endl;

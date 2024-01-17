@@ -1,10 +1,13 @@
 #include "sphere.h"
 
-__host__ __device__ bool sphere::is_inside(vec3_t point) {
+__device__ bool sphere::is_inside (vec3_t point,vec3_t* color) {
 	float a, b, c;
-	a = origin.x - point.x;
-	b = origin.y - point.y;
-	c = origin.z - point.z;
-
-	return (a * a + b * b + c * c) <= radius_sqr;
+	a = orig.x - point.x;
+	b = orig.y - point.y;
+	c = orig.z - point.z;
+	if((a * a + b * b + c * c) > radius_sqr)
+		return false;
+	
+	*color = { 0,0,0 };
+	return true;
 }

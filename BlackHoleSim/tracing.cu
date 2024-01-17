@@ -9,7 +9,7 @@ __device__ vec3_t color(ray r) {
     return (1.0f - t) * vec3_t{1.0, 1.0, 1.0} + t * vec3_t{ 0.5, 0.7, 1.0 };    
 }
 
-__global__ void render (cv::cuda::PtrStepSz<vec3_t> img, int max_x, int max_y, camera *cam) {
+__global__ void render (cv::cuda::PtrStepSz<vec3_t> img, int max_x, int max_y, camera *cam, sphere **ls, int count) {
     int i = threadIdx.x + blockIdx.x * blockDim.x;
     int j = threadIdx.y + blockIdx.y * blockDim.y;
 
@@ -20,8 +20,33 @@ __global__ void render (cv::cuda::PtrStepSz<vec3_t> img, int max_x, int max_y, c
     ray r = ray(cam->origin, cam->lower_left_corner + (u * cam->horizontal) + (v * cam->vertical) - cam->origin);
     //vec3 t = cam.horizontal;
     //ray r = ray(vec3_t{ 0,0,0 }, vec3_t{ 0,0,1 });
-    img(j,i) = color(r);
+    
+    //img(j, i) = color(r);
+    vec3_t col= r.march(ls, count);
+
+    img(j, i) = col;
     //img(j, i) = vec3_t{ 0.5f,0.7f,1.0f };
+}
+
+
+
+sphere** createScene() {
+    int size = 2;
+
+    sphere** scene = (sphere**)malloc(sizeof(sphere*)*size);
+    sphere** scene_gpu;
+
+    scene[0] = sphere(vec3_t{0,0,0}, 0.3f).allocGPU();
+    scene[1] = sphere(vec3_t{1,0,0}, 0.2f).allocGPU();
+
+    cudaMalloc(&scene_gpu, sizeof(sphere*) * size);
+
+    cudaMemcpy(scene_gpu, scene, sizeof(sphere*) * size, cudaMemcpyHostToDevice);
+
+    
+
+
+    return scene_gpu;
 }
 
 cv::Mat3f renderScene() {
@@ -37,14 +62,21 @@ cv::Mat3f renderScene() {
     camera cam(vec3_t{ 0,0,-2 }, vec3_t{ 0,0,1 }, vec3_t{ 0,1,0 }, 60, 1);
 
     camera *cam_gpu;
+
+
     cudaMalloc(&cam_gpu, sizeof(camera));
     cudaMemcpy(cam_gpu, &cam, sizeof(camera), cudaMemcpyHostToDevice);
-    render <<<grid_size, block_size >>> (gpu_img, 512, 512, cam_gpu);
-    printf("%s", cudaGetErrorString(cudaGetLastError()));
+
+    sphere** scene = createScene();
+    //cudaMalloc(&scene, sizeof(object) * 2);
+    
+
+    render <<<grid_size, block_size >>> (gpu_img, 512, 512, cam_gpu, scene, 2);
 
 
     cudaDeviceSynchronize();
-    gpu_img.download(img);
+    printf("%s \n", cudaGetErrorString(cudaGetLastError()));
+    //gpu_img.download(img);
 
     return img;
 }
