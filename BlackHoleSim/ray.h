@@ -20,31 +20,29 @@ public:
 	}
 
 
-	__device__ vec3_t march(sphere **obj_ls, int count) {
+	__device__ vec3_t march(sphere **obj_ls, sphere blackhole, int count) {
 		vec3_t next_orig;
 		vec3_t color = {1,1,1};
-		//test_head *t=new test_head();
-
-		//t->test_func(&color);
-
-		sphere gpu_ols[2] = { sphere(*(obj_ls[0])),sphere(*(obj_ls[1])) };
-
-
-		//bool test;
+		vec3_t t = cross(dir, norm(blackhole.get_origin() - orig));
+		vec3_t k = norm(t);
 		for (int i = 0; i < n_seg; i++) {
 			next_orig = orig + delta * dir;
-
+			t = cross(dir, norm(blackhole.get_origin() - orig));
 
 			for (int j = 0; j < count; j++) {
 				
-				if (gpu_ols[j].is_inside(next_orig, color)) {
-				//if(test){
-					//*test_pointer = { .1f,.1f,1 };
-
+				if (obj_ls[j]->is_inside(next_orig, color)) {
 					goto endLoop;
-				}
-					
+
+				}	
+				
 			}
+			if (blackhole.is_inside(next_orig, color)) {
+				goto endLoop;
+			}
+
+			dir = rotate(dir, k, blackhole.get_deflection(next_orig, 0.01f) * (t * t));
+
 			orig = next_orig;
 		}
 		endLoop:

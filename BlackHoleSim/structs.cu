@@ -36,3 +36,9 @@ __host__ __device__ vec3_t cross(const vec3_t& x, const vec3_t& y) {
 	return vec3_t{ x.y * y.z - x.z * y.y, -(x.x * y.z - x.z * y.x), x.x * y.y - x.y * y.x };
 }
 
+__host__ __device__ vec3_t rotate(const vec3_t& x, const vec3_t& k, float theta) {
+	float cos = cosf(theta);
+	float sin = sinf(theta);
+	return cos * x + sin * cross(k, x) + (k * x) * (1 - cos) * k;
+}
+
