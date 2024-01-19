@@ -56,5 +56,11 @@
     <ClInclude Include="tracing.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>Header\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="test_head.h">
+      <Filter>Header\Geometries</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

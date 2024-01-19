@@ -4,6 +4,8 @@
 #include "device_launch_parameters.h"
 #include <math.h>
 
+#define GRAV_LIGHT_CONST 1.48 //not accurate and is times 10^-27
+
 typedef struct _vec3 {
 	float x;
 	float y;
@@ -19,6 +21,13 @@ typedef struct _color {
 	float a;
 } color_t;
 
+typedef struct _shpere {
+	vec3_t position;
+	float radius;
+	vec3_t color;
+	float mass;
+}sphere_t;
+
 
 __host__ __device__ vec3_t operator+ (const vec3_t& x, const vec3_t& y);
 __host__ __device__ float operator* (const vec3_t& x, const vec3_t& y);
@@ -28,3 +37,5 @@ __host__ __device__ vec3_t operator/ (const vec3_t& x, const float& y);
 __host__ __device__ vec3_t norm(const vec3_t& v);
 
 __host__ __device__ vec3_t cross(const vec3_t& x, const vec3_t& y);
+
+__host__ __device__ vec3_t rotate(const vec3_t& x, const vec3_t& k, float theta);
