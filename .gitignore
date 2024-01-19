@@ -9,7 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.vcxproj # senza il simbolo del dollaro
+*.vcxproj$ # senza il simbolo del dollaro
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
