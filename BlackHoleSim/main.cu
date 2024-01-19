@@ -48,7 +48,7 @@ int main() {
 	{
 		cam_pos = vec3_t{ 0,2 * sinf(angle),-2 * cosf(angle) };
 		cam_dir = vec3_t{ 0,-sinf(angle),cosf(angle) };
-		camera cam(cam_pos, cam_dir, vec3_t{ 0,cosf(angle),+sinf(angle)}, 60, (float)img_w / img_h);
+		camera cam(cam_pos, cam_dir, vec3_t{ 0,1,0 }, 60, (float)img_w / img_h);	
 		cv::Mat m = renderScene(img_w, img_h,&cam);
 
 		cv::cvtColor(m, m, cv::COLOR_RGB2BGR);
@@ -59,7 +59,7 @@ int main() {
 		//std::cout << cudaGetErrorString(cudaGetLastError());
 
 		cv::imshow("Output", m);
-		angle += 0.1f;
+		angle += 0.05f;
 		if (cv::waitKey(1) & 0xFF == 'q')
 			break;
 	}
