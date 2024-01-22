@@ -35,13 +35,13 @@ __global__ void instantiate_scene(sphere ** ls, int count) {
     }
 }
 
-sphere** createScene() {
+sphere** createScene(float angle) {
     int size = 2;
 
     sphere** scene = (sphere**)malloc(sizeof(sphere*)*size);
     sphere** scene_gpu;
 
-    scene[0] = sphere(vec3_t{0,0,2}, 0.3f, {0,1,0}).allocGPU();
+    scene[0] = sphere(vec3_t{ 0, 2* sinf(angle), 2*cosf(angle) }, 0.3f, {0,1,0}).allocGPU();
     scene[1] = sphere(vec3_t{1,0,0}, 0.2f, {0, 1, 1}).allocGPU();
 
     cudaMalloc(&scene_gpu, sizeof(sphere*) * size);
@@ -60,23 +60,16 @@ void freeScene(sphere ** scene, int count) {
     cudaFree(scene);
     //printf("%s \n", cudaGetErrorString(cudaGetLastError()));
 }
-cv::Mat3f renderScene(int img_w, int img_h, camera *cam) {
+cv::Mat3f renderScene(int img_w, int img_h, camera *cam, float &angle) {
     cv::Mat3f img(img_h, img_w);
     cv::Mat3f hdr = read_exr();
-    cv::Mat3f hdr_rs;
     cv::cuda::GpuMat gpu_img;
     cv::cuda::GpuMat gpu_hdr;
 
-    cv::resize(hdr, hdr_rs, Size(img_w, img_h));
-    namedWindow("HDR", WINDOW_NORMAL);
-    imshow("HDR", hdr);
+    cv::resize(hdr, hdr, Size(img_w, img_h));
 
     gpu_img.upload(img);
-    gpu_hdr.upload(hdr_rs);
-
-    gpu_hdr.download(hdr_rs);
-    namedWindow("gpuHDR", WINDOW_NORMAL);
-    imshow("gpuHDR", hdr_rs);
+    gpu_hdr.upload(hdr);
 
     dim3 grid_size(img_w/32,img_h/32);
     dim3 block_size(32,32);
@@ -85,7 +78,7 @@ cv::Mat3f renderScene(int img_w, int img_h, camera *cam) {
     cudaMalloc(&cam_gpu, sizeof(camera));
     cudaMemcpy(cam_gpu, cam, sizeof(camera), cudaMemcpyHostToDevice);
     //printf("%s \n", cudaGetErrorString(cudaGetLastError()));
-    sphere** scene = createScene();
+    sphere** scene = createScene(angle);
     //cudaMalloc(&scene, sizeof(object) * 2);
     
     render <<<grid_size, block_size>>> (gpu_img, gpu_hdr, img_w, img_h, cam_gpu, scene, 2);

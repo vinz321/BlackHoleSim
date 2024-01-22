@@ -20,7 +20,6 @@ public:
 		return (a * a - b) >= 0;
 	}
 
-
 	__device__ vec3_t march(sphere **obj_ls, sphere blackhole, int count) {
 		vec3_t next_orig;
 		vec3_t color = hdr(v, u);
@@ -41,6 +40,7 @@ public:
 			dir = rotate(dir, k, blackhole.get_deflection(next_orig, 0.01f) * (t * t));
 			orig = next_orig;
 		}
+		color = hdr((1-dir.x)*hdr.rows, (1-dir.y) * hdr.cols);
 		endLoop:
 		return color;
 	}
