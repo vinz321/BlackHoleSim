@@ -54,7 +54,7 @@ int main() {
 		cam_pos = vec3_t{ 0, 2*sinf(angle), -2*cosf(angle) };
 		cam_dir = vec3_t{ 0, -sinf(angle), cosf(angle) };
 		camera cam(cam_pos, cam_dir, vec3_t{ 0, cosf(angle), +sinf(angle)}, 60, (float)img_w / img_h);
-		cv::Mat m = renderScene(img_w, img_h, &cam);
+		cv::Mat3f m = renderScene(img_w, img_h, &cam);
 
 		cv::cvtColor(m, m, cv::COLOR_RGB2BGR);
 		//std::cout << angle << std::endl;

@@ -62,8 +62,8 @@ void freeScene(sphere ** scene, int count) {
 }
 cv::Mat3f renderScene(int img_w, int img_h, camera *cam) {
     cv::Mat3f img(img_h, img_w);
-    cv::Mat hdr = read_exr();
-    cv::Mat hdr_rs;
+    cv::Mat3f hdr = read_exr();
+    cv::Mat3f hdr_rs;
     cv::cuda::GpuMat gpu_img;
     cv::cuda::GpuMat gpu_hdr;
 
