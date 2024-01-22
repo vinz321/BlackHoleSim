@@ -9,6 +9,6 @@ __host__ __device__ cv::Mat3f read_exr(){
 	cv::cvtColor(hdr, hdr, cv::COLOR_BGR2RGB);
 	/*namedWindow("HDR first", WINDOW_NORMAL);
 	imshow("HDR first", hdr);*/
-	hdr.convertTo(hdr, 21);
+	hdr.convertTo(hdr, CV_32F);
 	return hdr;
 }
