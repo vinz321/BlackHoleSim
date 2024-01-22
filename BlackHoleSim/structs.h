@@ -21,7 +21,7 @@ typedef struct _color {
 	float a;
 } color_t;
 
-typedef struct _shpere {
+typedef struct _sphere {
 	vec3_t position;
 	float radius;
 	vec3_t color;

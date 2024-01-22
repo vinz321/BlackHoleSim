@@ -6,10 +6,11 @@
 #include "sphere.h"
 #include "object.h"
 #include "test_head.h"
+#include "sky_engine.h"
 
 class ray {
 public:
-	__host__ __device__ ray(vec3_t orig, vec3_t dir) :orig(orig), dir(norm(dir)) {};
+	__host__ __device__ ray(vec3_t orig, vec3_t dir, int u, int v, cv::cuda::PtrStepSz<vec3_t> hdr) :orig(orig), dir(norm(dir)), u(u), v(v), hdr(hdr){};
 	__host__ __device__ vec3_t get_orig() { return orig; }
 	__host__ __device__ vec3_t get_dir() { return dir; }
 	__device__ bool hit_sphere(sphere s) {
@@ -22,7 +23,7 @@ public:
 
 	__device__ vec3_t march(sphere **obj_ls, sphere blackhole, int count) {
 		vec3_t next_orig;
-		vec3_t color = {1,1,1};
+		vec3_t color = hdr(v, u);
 		vec3_t t = cross(dir, norm(blackhole.get_origin() - orig));
 		vec3_t k = norm(t);
 		for (int i = 0; i < n_seg; i++) {
@@ -30,19 +31,14 @@ public:
 			t = cross(dir, norm(blackhole.get_origin() - orig));
 
 			for (int j = 0; j < count; j++) {
-				
 				if (obj_ls[j]->is_inside(next_orig, color)) {
 					goto endLoop;
-
-				}	
-				
+				}
 			}
 			if (blackhole.is_inside(next_orig, color)) {
 				goto endLoop;
 			}
-
 			dir = rotate(dir, k, blackhole.get_deflection(next_orig, 0.01f) * (t * t));
-
 			orig = next_orig;
 		}
 		endLoop:
@@ -53,4 +49,6 @@ private:
 	float delta=0.1f;
 	int n_seg = 128;
 	vec3_t orig, dir;
+	int u, v;
+	cv::cuda::PtrStepSz<vec3_t> hdr;
 };

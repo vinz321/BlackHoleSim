@@ -1,3 +1,4 @@
+#pragma once
 
 #include "cudaKern.h"
 
@@ -45,12 +46,9 @@ Mat calc_gravity_field() {
 	cudaMallocHost(&values, 256 * 256 * 3 * sizeof(vec3_t));
 	cudaMemset(values_gpu, 0, 256 * 256 * 3 * sizeof(vec3_t));
 
-
 	Mat3f test(256,256);
 	test.setTo(Vec3f(0, .5f, 1));
-
-
-	
+		
 	GpuMat t_gpu;
 	t_gpu.upload(test);
 

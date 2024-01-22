@@ -102,6 +102,7 @@
     <CudaCompile Include="main.cu">
       <DeploymentContent>false</DeploymentContent>
     </CudaCompile>
+    <CudaCompile Include="sky_engine.cu" />
     <CudaCompile Include="structs.cu" />
     <CudaCompile Include="tracing.cu" />
   </ItemGroup>
@@ -117,6 +118,7 @@
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="cudaKern.h" />
+    <ClInclude Include="sky_engine.h" />
     <ClInclude Include="test_head.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="ray.h" />

@@ -36,6 +36,9 @@
     <CudaCompile Include="sphere.cu">
       <Filter>Source\Geometries</Filter>
     </CudaCompile>
+    <CudaCompile Include="sky_engine.cu">
+      <Filter>Source</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cudaKern.h">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="test_head.h">
       <Filter>Header\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="sky_engine.h">
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
