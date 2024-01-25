@@ -14,7 +14,3 @@ __host__ __device__ camera::camera(vec3_t lookfrom, vec3_t lookat, vec3_t vup, f
     horizontal = 2 * half_width * u;
     vertical = 2 * half_height * v;
 }
-
-//__host__ __device__ ray camera::get_ray(float u, float v) {
-//    return ray(origin, lower_left_corner + (u * horizontal) + (v * vertical) - origin);
-//}

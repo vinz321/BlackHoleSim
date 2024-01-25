@@ -31,17 +31,16 @@ public:
 
 			for (int j = 0; j < count; j++) {
 				if (obj_ls[j]->is_inside(next_orig, color)) {
-					goto endLoop;
+					return color;
 				}
 			}
 			if (blackhole.is_inside(next_orig, color)) {
-				goto endLoop;
+				return color;
 			}
-			dir = rotate(dir, k, blackhole.get_deflection(next_orig, 0.01f) * (t * t));
+			//dir = rotate(dir, k, blackhole.get_deflection(next_orig, 0.01f) * (t * t));
 			orig = next_orig;
 		}
-		color = hdr((1-dir.x)*hdr.rows, (1-dir.y) * hdr.cols);
-		endLoop:
+		color = hdr(((dir.y) * 256), ((1-dir.x)*512));
 		return color;
 	}
 
