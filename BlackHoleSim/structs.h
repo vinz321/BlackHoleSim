@@ -4,6 +4,8 @@
 #include "device_launch_parameters.h"
 #include <math.h>
 
+#define PI 3.1415
+
 #define GRAV_LIGHT_CONST 1.48 //not accurate and is times 10^-27
 
 typedef struct _vec3 {

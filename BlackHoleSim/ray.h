@@ -37,10 +37,14 @@ public:
 			if (blackhole.is_inside(next_orig, color)) {
 				return color;
 			}
-			//dir = rotate(dir, k, blackhole.get_deflection(next_orig, 0.01f) * (t * t));
+			dir = rotate(dir, k, blackhole.get_deflection(next_orig, 0.01f) * (t * t));
 			orig = next_orig;
 		}
-		color = hdr(((dir.y) * 256), ((1-dir.x)*512));
+		v = ((atan2f(dir.z, dir.x)+PI)/(2*PI))*512;
+		//u = (1-((asin((dir.y+1)+(PI/2))/2)/(PI)))*256;
+		u = (1-((asinf((dir.y )) + (PI / 2)) / PI)) * 256;
+		//color = hdr((((dir.y+1)/2) * 256), (((2-(dir.x+1))/2)*512));
+		color = hdr(u, v);
 		return color;
 	}
 
