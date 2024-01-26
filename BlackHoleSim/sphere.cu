@@ -12,7 +12,7 @@ __device__ bool sphere::is_inside (vec3_t point,vec3_t& color) {
 	return true;
 }
 
-__host__ __device__ bool is_inside(sphere_t sphere, vec3_t point, vec3_t &col){
+__host__ __device__ bool is_inside(sphere_t& sphere, vec3_t point, vec3_t &col){
 	float a, b, c;
 	a = sphere.position.x - point.x;
 	b = sphere.position.y - point.y;
@@ -24,7 +24,7 @@ __host__ __device__ bool is_inside(sphere_t sphere, vec3_t point, vec3_t &col){
 	return true;
 }
 
-__host__ __device__ float get_deflection(sphere_t sphere, vec3_t point) {
+__host__ __device__ float get_deflection(sphere_t& sphere, vec3_t point) {
 	vec3_t dist_vec = point - sphere.position;
 	float dist = sqrt(dist_vec * dist_vec);
 

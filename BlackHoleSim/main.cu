@@ -1,3 +1,4 @@
+#include "cuda_profiler_api.h"
 #include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui.hpp>
@@ -17,7 +18,7 @@ __global__ void test_kern() {
 }
 
 int main() {
-
+	cudaProfilerStart();
 	vec3_t test = { 1,2,3 };
 	test = test + test;
 
@@ -49,12 +50,24 @@ int main() {
 	//cv::imshow("Output", m);
 	//cv::Mat3f m = calc_gravity_field();
 
+	size_t free, total;
+	cudaMemGetInfo(&free, &total);
+	
+	std::cout << "Free: " << free << " Total: " << total << std::endl;
+
+	cam_pos = vec3_t{ 0, 0, 0 };
+	cam_dir = vec3_t{ 0, 0, 1 };
+
+	//sphere** scene = createScene(0);
+	sphere_t* scene = createSceneStruct(0);
+
 	while (true)
 	{
-		cam_pos = vec3_t{ 0, 0, 0 };
-		cam_dir = vec3_t{ 0, 0, 1 };
-		camera cam(cam_pos, cam_dir, vec3_t{ 0, 1, 0}, 60, (float)img_w / img_h);
-		cv::Mat3f m = renderScene(img_w, img_h, &cam, angle, hdr);
+		//camera cam(cam_pos, cam_dir, vec3_t{ 0, 1, 0 }, 60, (float)img_w / img_h);
+		cam_pos = vec3_t{ 0,2 * sinf(angle),-2 * cosf(angle) };
+		cam_dir = vec3_t{ 0,-sinf(angle),cosf(angle) };
+		camera cam(cam_pos, cam_dir, vec3_t{ 0,cosf(angle),sinf(angle)}, 60, (float)img_w / img_h);
+		cv::Mat3f m = renderScene(img_w, img_h, &cam, angle, hdr, scene);
 
 		cv::cvtColor(m, m, cv::COLOR_RGB2BGR);
 		//std::cout << angle << std::endl;
@@ -65,7 +78,13 @@ int main() {
 		
 		cv::imshow("Output", m);
 		angle += 0.1f;
-		if (cv::waitKey(1) & 0xFF == 'q')
+		cudaMemGetInfo(&free, &total);
+		std::cout << "Free: " << free << " Total: " << total << std::endl;
+		if ((cv::waitKey(1) & 0xFF) == 'q') {
+			cudaProfilerStop();
 			break;
+		}
 	}
+
+	
 }

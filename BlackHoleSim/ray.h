@@ -37,10 +37,34 @@ public:
 			if (blackhole.is_inside(next_orig, color)) {
 				return color;
 			}
-			//dir = rotate(dir, k, blackhole.get_deflection(next_orig, 0.01f) * (t * t));
+			dir = rotate(dir, k, blackhole.get_deflection(next_orig, 0.01f) * (t * t));
 			orig = next_orig;
 		}
-		color = hdr(((dir.y) * 256), ((1-dir.x)*512));
+		color = hdr(((dir.y+1)/2 * 256), ((2-dir.x)/2 * 512));
+		return color;
+	}
+
+	__device__ vec3_t march(sphere_t* obj_ls, sphere_t * blackhole, int count) {
+		vec3_t next_orig;
+		vec3_t color;
+		vec3_t t = cross(dir, norm(blackhole->position - orig));
+		vec3_t k = norm(t);
+		for (int i = 0; i < n_seg; i++) {
+			next_orig = orig + delta * dir;
+			t = cross(dir, norm(blackhole->position - orig));
+
+			for (int j = 0; j < count; j++) {
+				if (is_inside(obj_ls[j], next_orig, color)) {
+					return color;
+				}
+			}
+			if (is_inside(*blackhole,next_orig, color)) {
+				return color;
+			}
+			dir = rotate(dir, k, get_deflection(*blackhole, next_orig) * (t * t));
+			orig = next_orig;
+		}
+		color = hdr(((dir.y + 1) / 2 * 256), ((2 - dir.x) / 2 * 512));
 		return color;
 	}
 

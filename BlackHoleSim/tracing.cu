@@ -29,6 +29,32 @@ __global__ void render (cv::cuda::PtrStepSz<vec3_t> img, cv::cuda::PtrStepSz<vec
     img(j, i) = col;
 }
 
+__global__ void render_shared(cv::cuda::PtrStepSz<vec3_t> img, cv::cuda::PtrStepSz<vec3_t> hdr, int max_x, int max_y, camera* cam, sphere_t* ls, int count) {
+    __shared__ sphere_t spheres[5];
+    __shared__ sphere_t blackhole[1];
+
+    if (threadIdx.x == 0 && threadIdx.y == 0) {
+        for (int i = 0; i < count; i++) {
+                spheres[i] = ls[i];
+           }
+
+        blackhole[0] = sphere_t{ { .3f,2,4 }, 0.2f, { 0,0,0 } , 0.01f };
+    }
+
+    __syncthreads();
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
+    int j = threadIdx.y + blockIdx.y * blockDim.y;
+
+    //sphere s = sphere(*ls[0]);
+    if ((i >= max_x) || (j >= max_y)) return;
+    float u = float(i) / float(max_x);
+    float v = float(j) / float(max_y);
+
+    ray r = ray(cam->origin, cam->lower_left_corner + (u * cam->horizontal) + (v * cam->vertical) - cam->origin, i, j, hdr);
+    vec3_t col = r.march(ls, blackhole, count);
+    img(j, i) = col;
+}
+
 __global__ void instantiate_scene(sphere ** ls, int count) {
     for (int i = 0; i < count; i++) {
         ls[i] = new sphere(*(ls[i]));
@@ -52,6 +78,23 @@ sphere** createScene(float angle) {
     return scene_gpu;
 }
 
+sphere_t* createSceneStruct(float angle) {
+    int size = 2;
+
+    sphere_t* scene;
+    cudaMallocHost(&scene, sizeof(sphere_t) * size);
+    sphere_t* scene_gpu;
+    cudaMalloc(&scene_gpu, sizeof(sphere_t) * size);
+
+
+    scene[0] = sphere_t{ vec3_t{ 0, 2 * sinf(angle) + 2, 2 * cosf(angle) + 4 }, 0.3f, { 0,1,0 }, 0 };
+    scene[1] = sphere_t{vec3_t{ 1,2,4 }, 0.2f, { 0, 1, 1 }, 0};
+
+    cudaMemcpy(scene_gpu, scene, sizeof(sphere_t) * size, cudaMemcpyHostToDevice);
+
+    return scene_gpu;
+}
+
 void freeScene(sphere ** scene, int count) {
     /*for (int i = 0; i < count; i++) {
         cudaFree(scene[i]);
@@ -60,12 +103,16 @@ void freeScene(sphere ** scene, int count) {
     cudaFree(scene);
     //printf("%s \n", cudaGetErrorString(cudaGetLastError()));
 }
-cv::Mat3f renderScene(int img_w, int img_h, camera *cam, float &angle, Mat3f &hdr) {
+
+void freeScene(sphere_t* scene) {
+    cudaFree(scene);
+}
+cv::Mat3f renderScene(int img_w, int img_h, camera *cam, float &angle, Mat3f &hdr, sphere** scene) {
     cv::Mat3f img(img_h, img_w);
     cv::cuda::GpuMat gpu_img;
     cv::cuda::GpuMat gpu_hdr;
 
-    cv::resize(hdr, hdr, Size(img_w, img_h));
+    //cv::resize(hdr, hdr, Size(img_w, img_h));
 
     gpu_img.upload(img);
     gpu_hdr.upload(hdr);
@@ -76,8 +123,11 @@ cv::Mat3f renderScene(int img_w, int img_h, camera *cam, float &angle, Mat3f &hd
 
     cudaMalloc(&cam_gpu, sizeof(camera));
     cudaMemcpy(cam_gpu, cam, sizeof(camera), cudaMemcpyHostToDevice);
+    
     //printf("%s \n", cudaGetErrorString(cudaGetLastError()));
-    sphere** scene = createScene(angle);
+    
+    //sphere** scene = createScene(angle);
+    
     //cudaMalloc(&scene, sizeof(object) * 2);
     
     render <<<grid_size, block_size>>> (gpu_img, gpu_hdr, img_w, img_h, cam_gpu, scene, 2);
@@ -86,7 +136,39 @@ cv::Mat3f renderScene(int img_w, int img_h, camera *cam, float &angle, Mat3f &hd
     cudaFree(cam_gpu);
     //printf("%s \n", cudaGetErrorString(cudaGetLastError()));
     gpu_img.download(img);
-    freeScene(scene, 2);
+    //freeScene(scene, 2);
     return img;
 }
 
+cv::Mat3f renderScene(int img_w, int img_h, camera* cam, float& angle, Mat3f& hdr, sphere_t* scene) {
+    cv::Mat3f img(img_h, img_w);
+    cv::cuda::GpuMat gpu_img;
+    cv::cuda::GpuMat gpu_hdr;
+
+    //cv::resize(hdr, hdr, Size(img_w, img_h));
+
+    gpu_img.upload(img);
+    gpu_hdr.upload(hdr);
+
+    dim3 grid_size(img_w / 32, img_h / 32);
+    dim3 block_size(32, 32);
+    camera* cam_gpu;
+
+    cudaMalloc(&cam_gpu, sizeof(camera));
+    cudaMemcpy(cam_gpu, cam, sizeof(camera), cudaMemcpyHostToDevice);
+
+    //printf("%s \n", cudaGetErrorString(cudaGetLastError()));
+
+    //sphere** scene = createScene(angle);
+
+    //cudaMalloc(&scene, sizeof(object) * 2);
+
+    render_shared << <grid_size, block_size >> > (gpu_img, gpu_hdr, img_w, img_h, cam_gpu, scene, 2);
+
+    cudaDeviceSynchronize();
+    cudaFree(cam_gpu);
+    //printf("%s \n", cudaGetErrorString(cudaGetLastError()));
+    gpu_img.download(img);
+    //freeScene(scene, 2);
+    return img;
+}

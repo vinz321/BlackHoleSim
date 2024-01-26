@@ -7,6 +7,7 @@
 #include <iostream>
 
 
+
 class sphere : public object{
 	public:
 		__host__ __device__  sphere(vec3_t origin, float radius) :object(origin), radius(radius) { radius_sqr = radius * radius; }
@@ -43,6 +44,6 @@ class sphere : public object{
 
 };
 
-__host__ __device__ bool is_inside(sphere_t sphere, vec3_t point, vec3_t& col);
+__host__ __device__ bool is_inside(sphere_t &sphere, vec3_t point, vec3_t& col);
 
-__host__ __device__ float get_deflection(sphere_t sphere, vec3_t point);
+__host__ __device__ float get_deflection(sphere_t &sphere, vec3_t point);
