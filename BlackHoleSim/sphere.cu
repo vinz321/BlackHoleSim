@@ -12,7 +12,7 @@ __device__ bool sphere::is_inside (vec3_t point,vec3_t& color) {
 	return true;
 }
 
-__host__ __device__ bool is_inside(sphere_t& sphere, vec3_t point, vec3_t &col){
+ __device__ bool is_inside(sphere_t& sphere, vec3_t point, vec3_t &col){
 	float a, b, c;
 	a = sphere.position.x - point.x;
 	b = sphere.position.y - point.y;

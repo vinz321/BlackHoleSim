@@ -15,7 +15,7 @@ __device__ vec3_t color(ray r);
 __global__ void render(cv::cuda::PtrStepSz<vec3_t> img, int max_x, int max_y, camera *cam, sphere** scene, int count);
 
 cv::Mat3f renderScene(int img_w, int img_h, camera* cam, float& angle, Mat3f &hdr, sphere** scene);
-cv::Mat3f renderScene(int img_w, int img_h, camera* cam, float& angle, Mat3f& hdr, sphere_t* scene);
+cv::Mat renderScene(int img_w, int img_h, camera_t* cam, float& angle, Mat3f& hdr, sphere_t* scene, disk_t *disk);
 
 sphere** createScene(float angle);
 sphere_t* createSceneStruct(float angle);

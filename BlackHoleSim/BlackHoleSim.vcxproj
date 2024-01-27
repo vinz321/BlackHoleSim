@@ -87,6 +87,8 @@
       <NvccCompilation>compile</NvccCompilation>
       <AdditionalOptions>-G %(AdditionalOptions)</AdditionalOptions>
       <GPUDebugInfo>true</GPUDebugInfo>
+      <FastMath>true</FastMath>
+      <Optimization>O2</Optimization>
     </CudaCompile>
     <CudaLink>
       <PerformDeviceLink>true</PerformDeviceLink>

@@ -58,28 +58,20 @@ int main() {
 	cam_pos = vec3_t{ 0, 0, 0 };
 	cam_dir = vec3_t{ 0, 0, 1 };
 
-	//sphere** scene = createScene(0);
-	sphere_t* scene = createSceneStruct(0);
-
 	while (true)
 	{
-		//camera cam(cam_pos, cam_dir, vec3_t{ 0, 1, 0 }, 60, (float)img_w / img_h);
-		cam_pos = vec3_t{ 0,2 * sinf(angle),-2 * cosf(angle) };
-		cam_dir = vec3_t{ 0,-sinf(angle),cosf(angle) };
-		camera cam(cam_pos, cam_dir, vec3_t{ 0,cosf(angle),sinf(angle)}, 60, (float)img_w / img_h);
-		cv::Mat3f m = renderScene(img_w, img_h, &cam, angle, hdr, scene);
+		sphere_t* scene = createSceneStruct(2*angle);
+		cam_pos = vec3_t{ 2*cosf(angle), 2* sinf(angle), -0.5f};
+		//cam_dir = vec3_t{ -sinf(angle),-sinf(PI / 2 * 0.95f)*cosf(angle),cosf(PI / 2 * 0.95f)};
 
-		cv::cvtColor(m, m, cv::COLOR_RGB2BGR);
-		//std::cout << angle << std::endl;
-		
-		//std::cout << m << std::endl;
-		//test_kern <<<1, 1 >>> ();
-		//std::cout << cudaGetErrorString(cudaGetLastError());
+		cam_dir = norm(vec3_t{0,0,0} - cam_pos);
+		camera_t cam = make_cam(cam_pos, cam_dir, vec3_t{ 0,0,1}, 60, (float)img_w / img_h);
+		cv::Mat m = renderScene(img_w, img_h, &cam, angle, hdr, scene, (disk_t*)(scene + 2));
 		
 		cv::imshow("Output", m);
 		angle += 0.1f;
-		cudaMemGetInfo(&free, &total);
-		std::cout << "Free: " << free << " Total: " << total << std::endl;
+		//cudaMemGetInfo(&free, &total);
+		//std::cout << "Free: " << free << " Total: " << total << std::endl;
 		if ((cv::waitKey(1) & 0xFF) == 'q') {
 			cudaProfilerStop();
 			break;
