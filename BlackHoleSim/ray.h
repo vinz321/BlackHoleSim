@@ -64,6 +64,8 @@ public:
 			dir = rotate(dir, k, get_deflection(*blackhole, next_orig) * (t * t));
 			orig = next_orig;
 		}
+		v = ((atan2f(dir.z, dir.x) + PI) / (2 * PI)) * 512;
+		u = (1 - ((asinf((dir.y)) + (PI / 2)) / PI)) * 256;
 		color = hdr(((dir.y + 1) / 2 * 256), ((2 - dir.x) / 2 * 512));
 		return color;
 	}
