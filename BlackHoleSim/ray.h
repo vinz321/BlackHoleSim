@@ -27,4 +27,4 @@ public:
 	cv::cuda::PtrStepSz<vec3_t> hdr;
 };
 
-__device__ vec3_t march(ray_t& r, cv::cuda::PtrStepSz<vec3_t> hdr, sphere_t* obj_ls, sphere_t* blackhole, int count, disk_t* disk);
+__device__ vec3_t march(ray_t& r, cv::cuda::PtrStepSz<vec3_t> hdr, sphere_t* obj_ls, int count, disk_t* disk);
