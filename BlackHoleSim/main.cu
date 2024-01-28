@@ -69,7 +69,6 @@ int main() {
 		std::cout << "Time elapsed: " << time << std::endl;
 
 		if ((cv::waitKey(1) & 0xFF) == 'q') {
-			//cudaProfilerStop();
 			break;
 		}
 	}

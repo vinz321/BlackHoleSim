@@ -37,7 +37,6 @@ __global__ void render_base(cv::cuda::PtrStepSz<vec3_t> img, cv::cuda::PtrStepSz
     int i = threadIdx.x + blockIdx.x * blockDim.x;
     int j = threadIdx.y + blockIdx.y * blockDim.y;
 
-    //sphere s = sphere(*ls[0]);
     if ((i >= max_x) || (j >= max_y)) return;
     float u = float(i) / float(max_x);
     float v = float(j) / float(max_y);
