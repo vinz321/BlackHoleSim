@@ -21,18 +21,11 @@ int main() {
 	cudaProfilerStart();
 	vec3_t test = { 1,2,3 };
 	test = test + test;
-
-	std::cout << sizeof(object)<< std::endl;
-
-	std::cout << sizeof(sphere) << std::endl;
-
-	std::cout << sizeof(object*) << std::endl;
 	float img_w = 512;
 	float img_h = 256;
 	float angle = 0;
 	vec3_t cam_pos= vec3_t{ 0,2*sinf(angle),-2*cosf(angle)};
 	vec3_t cam_dir= vec3_t{ 0,-sinf(angle),cosf(angle)};
-
 	Mat3f hdr = read_exr();
 
 	/*cam_pos = vec3_t{ 0,2 * sinf(angle),-2 * cosf(angle) };
@@ -58,18 +51,37 @@ int main() {
 	cam_pos = vec3_t{ 0, 0, 0 };
 	cam_dir = vec3_t{ 0, 0, 1 };
 
+	cudaStream_t mem_stream;
+	cudaStreamCreate(&mem_stream);
+
+	cudaEvent_t start, end; 
+	cudaEventCreate(&start);
+	cudaEventCreate(&end);
+
+	float time;
+
+	//sphere_t* scene = createSceneStruct(0); //SHARED
 	while (true)
 	{
-		sphere_t* scene = createSceneStruct(2*angle);
-		cam_pos = vec3_t{ 2*cosf(angle), 2* sinf(angle), -0.5f};
+		cudaEventRecord(start);
+		//scene= createSceneStruct(angle); //SHARED
+		createSceneInConstant(2*angle, mem_stream); //CONSTANT
+		cam_pos = vec3_t{ 2*cosf(angle), 2* sinf(angle), -0.25f};
 		//cam_dir = vec3_t{ -sinf(angle),-sinf(PI / 2 * 0.95f)*cosf(angle),cosf(PI / 2 * 0.95f)};
 
 		cam_dir = norm(vec3_t{0,0,0} - cam_pos);
+
 		camera_t cam = make_cam(cam_pos, cam_dir, vec3_t{ 0,0,1}, 60, (float)img_w / img_h);
-		cv::Mat m = renderScene(img_w, img_h, &cam, angle, hdr, scene, (disk_t*)(scene + 2));
+		//cv::Mat m = renderScene(img_w, img_h, &cam, angle, hdr, scene, (disk_t*)(scene + 2)); //SHARED
+		cv::Mat m = renderSceneConst(img_w, img_h, &cam, angle, hdr); //CONSTANT
 		
 		cv::imshow("Output", m);
 		angle += 0.1f;
+
+		cudaEventRecord(end);
+
+		cudaEventElapsedTime(&time, start, end);
+		std::cout << "Time elapsed: " << time << std::endl;
 		//cudaMemGetInfo(&free, &total);
 		//std::cout << "Free: " << free << " Total: " << total << std::endl;
 		if ((cv::waitKey(1) & 0xFF) == 'q') {
@@ -80,3 +92,6 @@ int main() {
 
 	
 }
+
+
+//Constant memory 85 ms

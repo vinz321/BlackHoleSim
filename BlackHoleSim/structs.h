@@ -23,28 +23,28 @@ typedef struct _color {
 	float a;
 } color_t;
 
-typedef struct _sphere {
+typedef struct _sphere { //32B
 	vec3_t position;
 	float radius;
 	vec3_t color;
 	float mass;
 }sphere_t;
 
-typedef struct _disk {
+typedef struct __align__(64)  _disk { //64B
 	vec3_t position;
 	float radius1, radius2;
 	vec3_t color;
 	vec3_t normal;
 } disk_t;
 
-typedef struct _ray {
+typedef struct _ray { //32B
 	vec3_t orig;
 	vec3_t dir;
 	float delta;
 	int n_steps;
 } ray_t;
 
-typedef struct _camera {
+typedef struct __align__(64) _camera { //64B
 	vec3_t origin;
 	vec3_t lower_left_corner;
 	vec3_t horizontal;

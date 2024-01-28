@@ -71,6 +71,8 @@ __device__ vec3_t march(ray_t& r, cv::cuda::PtrStepSz<vec3_t> hdr, sphere_t* obj
 	vec3_t color;
 	vec3_t t = cross(r.dir, norm(blackhole->position - r.orig));
 	vec3_t k = norm(t);
+
+	#pragma unroll
 	for (int i = 0; i < r.n_steps; i++) {
 		next_orig = r.orig + r.delta * r.dir;
 		t = cross(r.dir, norm(blackhole->position - r.orig));
@@ -80,9 +82,11 @@ __device__ vec3_t march(ray_t& r, cv::cuda::PtrStepSz<vec3_t> hdr, sphere_t* obj
 				return color;
 			}
 		}
+
 		if (is_inside(*blackhole, next_orig, color)) {
 			return color;
 		}
+
 		if (hit_disk(*disk, r.orig, r.dir, r.delta, color)) {
 			return color;
 		}
