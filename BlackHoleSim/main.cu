@@ -53,13 +53,10 @@ int main() {
 		cam_dir = norm(vec3_t{0,0,0} - cam_pos);
 		camera_t cam = make_cam(cam_pos, cam_dir, vec3_t{ 0,0,1}, 80, (float)img_w / img_h);
 		cv::Mat m = renderScene(img_w, img_h, &cam, angle, hdr, scene, (disk_t*)(scene + 3));
-		
 		cv::imshow("Output", m);
 		angle += 0.1f;
-		//cudaMemGetInfo(&free, &total);
-		//std::cout << "Free: " << free << " Total: " << total << std::endl;
+
 		if ((cv::waitKey(1) & 0xFF) == 'q') {
-			//cudaProfilerStop();
 			break;
 		}
 	}
