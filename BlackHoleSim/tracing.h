@@ -19,3 +19,5 @@ cv::Mat renderScene(int img_w, int img_h, camera_t* cam, float& angle, Mat3f& hd
 
 sphere** createScene(float angle);
 sphere_t* createSceneStruct(float angle);
+
+__global__ void render_shared(cv::cuda::PtrStepSz<vec3_t> img, cv::cuda::PtrStepSz<vec3_t> hdr, int max_x, int max_y, camera_t* cam_o, sphere_t* ls, int count, disk_t* disk_s);

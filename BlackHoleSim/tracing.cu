@@ -45,7 +45,7 @@ __global__ void instantiate_scene(sphere ** ls, int count) {
     }
 }
 
-__constant__ sphere_t* const_scene;
+__constant__ sphere_t *const_scene;
 
 sphere_t* createSceneStruct(float angle) {
     int size = 3;
@@ -54,12 +54,12 @@ sphere_t* createSceneStruct(float angle) {
     cudaMallocHost(&scene, sizeof(sphere_t) * (size) + sizeof(disk_t));
     cudaMalloc(&const_scene, sizeof(sphere_t) * (size) + sizeof(disk_t));
 
-    scene[0] = sphere_t{ { 0,0,0 }, 0.2f, { 0,0,0 } , 0.0015f }; //blackhole
+    scene[0] = sphere_t{ { 0,0,0 }, 0.3f, { 0,0,0 } , 0.0045f }; //blackhole
     scene[1] = sphere_t{ vec3_t{ -.7f * cosf(angle) , .7f * sinf(angle), 0 }, 0.1f, { 1,1,.8f }, 0 };
     scene[2] = sphere_t{vec3_t{ 0.9f,0,0 }, 0.05f, {.9f ,1, 1 }, 0};
     *(disk_t*)(scene + 3) = disk_t{ {0,0,0}, 0.25f, 0.6f, {1,1,1} ,{0,0,1} };
 
-    cudaMemcpyToSymbol("const_scene", scene, sizeof(sphere_t) * (size)+sizeof(disk_t), cudaMemcpyHostToDevice);
+    cudaMemcpyToSymbol(const_scene, scene, sizeof(sphere_t) * (size)+sizeof(disk_t), cudaMemcpyHostToDevice);
 
     return scene;
 }

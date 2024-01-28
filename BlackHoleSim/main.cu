@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include "tracing.h"
 #include <math.h>
+#include "structs.h"
 #include "sky_engine.h"
 
 //#include "cudaKern.h"
@@ -74,7 +75,7 @@ int main() {
 		//cam_dir = vec3_t{ -sinf(angle),-sinf(PI / 2 * 0.95f)*cosf(angle),cosf(PI / 2 * 0.95f)};
 
 		cam_dir = norm(vec3_t{0,0,0} - cam_pos);
-		camera_t cam = make_cam(cam_pos, cam_dir, vec3_t{ 0,0,1}, 120, (float)img_w / img_h);
+		camera_t cam = make_cam(cam_pos, cam_dir, vec3_t{ 0,0,1}, 80, (float)img_w / img_h);
 		cv::Mat m = renderScene(img_w, img_h, &cam, angle, hdr, scene, (disk_t*)(scene + 3));
 		
 		cv::imshow("Output", m);
