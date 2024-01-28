@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include "tracing.h"
 #include <math.h>
+#include "structs.h"
 #include "sky_engine.h"
 using namespace cv::cuda;
 
