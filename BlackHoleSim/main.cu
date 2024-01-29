@@ -12,13 +12,12 @@
 
 using namespace cv::cuda;
 
-__global__ void test_kern() {
-	vec3_t test = { 1,2,3 };
-	vec3_t test2 = test + test;
+void render_screen() {
+
 }
 
 int main() {
-	cudaProfilerStart();
+	
 	vec3_t test = { 1,2,3 };
 	test = test + test;
 	float img_w = 512;
@@ -26,7 +25,8 @@ int main() {
 	float angle = 0;
 	vec3_t cam_pos= vec3_t{ 0,2*sinf(angle),-2*cosf(angle)};
 	vec3_t cam_dir= vec3_t{ 0,-sinf(angle),cosf(angle)};
-	Mat3f hdr = read_exr();
+	Mat3f hdri_cpu = read_exr();
+	cv::resize(hdri_cpu, hdri_cpu, Size(1024, 512));
 
 	/*cam_pos = vec3_t{ 0,2 * sinf(angle),-2 * cosf(angle) };
 	cam_dir = vec3_t{ 0,-sinf(angle),cosf(angle) };
@@ -55,31 +55,39 @@ int main() {
 	cudaStreamCreate(&mem_stream);
 
 	cudaEvent_t start, end; 
+	
+	float time;
+
+	//sphere_t* scene = createSceneStruct(0, mem_stream); //BASELINE
+	GpuMat hdri;
+	hdri.upload(hdri_cpu);
+
 	cudaEventCreate(&start);
 	cudaEventCreate(&end);
 
-	float time;
-
-	//sphere_t* scene = createSceneStruct(0); //SHARED
-	while (true)
+	
+	for(int i=0;i<5;i++)
+	//while(true)
 	{
+		if(i==4)
+			cudaProfilerStart();
 		cudaEventRecord(start);
-		//scene= createSceneStruct(angle); //SHARED
-		createSceneInConstant(2*angle, mem_stream); //CONSTANT
+		//scene= createSceneStruct(angle, mem_stream); //BASELINE
+
 		cam_pos = vec3_t{ 2*cosf(angle), 2* sinf(angle), -0.25f};
-		//cam_dir = vec3_t{ -sinf(angle),-sinf(PI / 2 * 0.95f)*cosf(angle),cosf(PI / 2 * 0.95f)};
-
 		cam_dir = norm(vec3_t{0,0,0} - cam_pos);
-
 		camera_t cam = make_cam(cam_pos, cam_dir, vec3_t{ 0,0,1}, 60, (float)img_w / img_h);
-		//cv::Mat m = renderScene(img_w, img_h, &cam, angle, hdr, scene, (disk_t*)(scene + 2)); //SHARED
-		cv::Mat m = renderSceneConst(img_w, img_h, &cam, angle, hdr); //CONSTANT
+
+		createSceneInConstant(2*angle, mem_stream, &cam); //CONSTANT
+		//cv::Mat m = renderScene(hdri, img_w, img_h, angle, scene, (disk_t *)(scene + 3), &cam); //BASELINE
+		cv::Mat m = renderScene(hdri, img_w, img_h, angle); //SHARED
+		//cv::Mat m = renderSceneConst(hdri, img_w, img_h, angle); //CONSTANT
+
+		cudaEventRecord(end);
 		
 		cv::imshow("Output", m);
 		angle += 0.1f;
-
-		cudaEventRecord(end);
-
+		
 		cudaEventElapsedTime(&time, start, end);
 		std::cout << "Time elapsed: " << time << std::endl;
 		//cudaMemGetInfo(&free, &total);

@@ -12,13 +12,10 @@
 
 __device__ vec3_t color(ray r);
 
-__global__ void render(cv::cuda::PtrStepSz<vec3_t> img, int max_x, int max_y, camera *cam, sphere** scene, int count);
+cv::Mat renderScene(cv::cuda::GpuMat hdri, int img_w, int img_h, float& angle, sphere_t *scene, disk_t* disk, camera_t *cam); // BASELINE
+cv::Mat renderScene(cv::cuda::GpuMat hdri,int img_w, int img_h, float& angle); // SHARED
+cv::Mat renderSceneConst(cv::cuda::GpuMat hdri, int img_w, int img_h, float& angle); // CONSTANT
 
-cv::Mat3f renderScene(int img_w, int img_h, camera* cam, float& angle, Mat3f &hdr, sphere** scene);
-cv::Mat renderScene(int img_w, int img_h, camera_t* cam, float& angle, Mat3f& hdr, sphere_t* scene, disk_t *disk);
-cv::Mat renderSceneConst(int img_w, int img_h, camera_t* cam, float& angle, Mat3f& hdr);
-
-sphere** createScene(float angle);
-sphere_t* createSceneStruct(float angle);
-void createSceneInConstant(float angle,cudaStream_t stream);
+sphere_t* createSceneStruct(float angle, cudaStream_t stream);
+void createSceneInConstant(float angle,cudaStream_t stream, camera_t* cam);
 

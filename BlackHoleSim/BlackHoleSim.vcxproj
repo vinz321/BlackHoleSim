@@ -79,13 +79,12 @@
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
       <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
-      <ExtensibleWholeProgramCompilation>false</ExtensibleWholeProgramCompilation>
       <CudaRuntime>Shared</CudaRuntime>
       <AdditionalCompilerOptions>
       </AdditionalCompilerOptions>
       <Keep>false</Keep>
       <NvccCompilation>compile</NvccCompilation>
-      <AdditionalOptions>-G %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-G -ftz=true -prec-div=false -prec-sqrt=false %(AdditionalOptions)</AdditionalOptions>
       <GPUDebugInfo>true</GPUDebugInfo>
       <FastMath>true</FastMath>
       <Optimization>O2</Optimization>

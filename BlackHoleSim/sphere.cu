@@ -13,16 +13,23 @@ __device__ bool sphere::is_inside (vec3_t point,vec3_t& color) {
 }
 
  __device__ bool is_inside(sphere_t& sphere, vec3_t point, vec3_t &col){
-	float a, b, c;
-	a = sphere.position.x - point.x;
-	b = sphere.position.y - point.y;
-	c = sphere.position.z - point.z;
-	if ((a * a + b * b + c * c) > sphere.radius * sphere.radius)
+	vec3_t a;
+	float sqr_rad = sphere.radius * sphere.radius;
+	a = sphere.position - point;
+	if (mul_add(a,a, -sqr_rad)>0)
 		return false;
 
 	col = sphere.color;
 	return true;
 }
+
+ __device__ bool is_inside(sphere_t& sphere, vec3_t r, vec3_t point, vec3_t& col) {
+	 if (r*r > sphere.radius * sphere.radius)
+		 return false;
+
+	 col = sphere.color;
+	 return true;
+ }
 
 __host__ __device__ float get_deflection(sphere_t& sphere, vec3_t point) {
 	vec3_t dist_vec = point - sphere.position;

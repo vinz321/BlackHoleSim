@@ -3,7 +3,7 @@
 #include "structs.h"
 #include "ray.h"
 
-#define PI 3.1415
+
 
 class camera {
 public:
