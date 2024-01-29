@@ -6,7 +6,7 @@
 
 using namespace std;
 
-__constant__ sphere_t* const_scene;
+__constant__ sphere_t const_scene[3];
 
 __global__ void render_shared(cv::cuda::PtrStepSz<vec3_t> img, cv::cuda::PtrStepSz<vec3_t> hdr, int max_x, int max_y, camera_t* cam_o, sphere_t* ls, int count, disk_t* disk_s) {
     //__shared__ sphere_t spheres[3];
@@ -74,6 +74,6 @@ cv::Mat renderScene(int img_w, int img_h, camera_t* cam, float& angle, Mat3f& hd
     cudaDeviceSynchronize();
     gpu_img.download(img);
     cudaFree(cam_gpu);
-    //freeScene(scene, 2);
+    //cudaFree(scene);
     return img;
 }
