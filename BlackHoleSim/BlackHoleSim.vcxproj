@@ -82,12 +82,11 @@
       <CudaRuntime>Shared</CudaRuntime>
       <AdditionalCompilerOptions>
       </AdditionalCompilerOptions>
-      <Keep>false</Keep>
+      <Keep>true</Keep>
       <NvccCompilation>compile</NvccCompilation>
       <AdditionalOptions>-G -ftz=true -prec-div=false -prec-sqrt=false %(AdditionalOptions)</AdditionalOptions>
       <GPUDebugInfo>true</GPUDebugInfo>
       <FastMath>true</FastMath>
-      <Optimization>O2</Optimization>
     </CudaCompile>
     <CudaLink>
       <PerformDeviceLink>true</PerformDeviceLink>

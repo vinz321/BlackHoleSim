@@ -16,7 +16,7 @@ __device__ bool sphere::is_inside (vec3_t point,vec3_t& color) {
 	vec3_t a;
 	float sqr_rad = sphere.radius * sphere.radius;
 	a = sphere.position - point;
-	if (mul_add(a,a, -sqr_rad)>0)
+	if (a*a>sqr_rad)
 		return false;
 
 	col = sphere.color;

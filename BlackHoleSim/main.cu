@@ -58,7 +58,7 @@ int main() {
 	
 	float time;
 
-	//sphere_t* scene = createSceneStruct(0, mem_stream); //BASELINE
+	sphere_t* scene = createSceneStruct(0, mem_stream); //BASELINE
 	GpuMat hdri;
 	hdri.upload(hdri_cpu);
 
@@ -66,21 +66,21 @@ int main() {
 	cudaEventCreate(&end);
 
 	
-	for(int i=0;i<5;i++)
-	//while(true)
+	//for(int i=0;i<3;i++)
+	while(true)
 	{
-		if(i==4)
-			cudaProfilerStart();
+		/*if(i==4)
+			cudaProfilerStart();*/
 		cudaEventRecord(start);
-		//scene= createSceneStruct(angle, mem_stream); //BASELINE
+		scene= createSceneStruct(angle, mem_stream); //BASELINE
 
 		cam_pos = vec3_t{ 2*cosf(angle), 2* sinf(angle), -0.25f};
 		cam_dir = norm(vec3_t{0,0,0} - cam_pos);
 		camera_t cam = make_cam(cam_pos, cam_dir, vec3_t{ 0,0,1}, 60, (float)img_w / img_h);
 
 		createSceneInConstant(2*angle, mem_stream, &cam); //CONSTANT
-		//cv::Mat m = renderScene(hdri, img_w, img_h, angle, scene, (disk_t *)(scene + 3), &cam); //BASELINE
-		cv::Mat m = renderScene(hdri, img_w, img_h, angle); //SHARED
+		cv::Mat m = renderScene(hdri, img_w, img_h, angle, scene, (disk_t *)(scene + 3), &cam); //BASELINE
+		//cv::Mat m = renderScene(hdri, img_w, img_h, angle); //SHARED
 		//cv::Mat m = renderSceneConst(hdri, img_w, img_h, angle); //CONSTANT
 
 		cudaEventRecord(end);
@@ -97,8 +97,6 @@ int main() {
 			break;
 		}
 	}
-
-	
 }
 
 
