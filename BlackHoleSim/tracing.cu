@@ -7,13 +7,13 @@
 using namespace std;
 
 __device__ vec3_t color(ray r) {
-    if (r.hit_sphere(sphere(vec3_t{ 0.0f, 0.0f, 0.0f }, 0.5)))
-        return vec3_t{ 0.0f, 0.0f, 0.0f };
+    if (r.hit_sphere(sphere(vec3_t{ 0.0f, 0.0f, 0.0f, 0 }, 0.5)))
+        return vec3_t{ 0.0f, 0.0f, 0.0f, 0 };
     //else return HDRI color correspondent to this ray
     vec3_t unit_direction = norm(r.get_dir());
     
     float t = 0.5f * (unit_direction.y + 1.0f);
-    return (1.0f - t) * vec3_t{1.0, 1.0, 1.0} + t * vec3_t{ 0.5, 0.7, 1.0 };
+    return (1.0f - t) * vec3_t{1.0, 1.0, 1.0, 0} + t * vec3_t{ 0.5, 0.7, 1.0, 0 };
 }
 
 __constant__ sphere_t test_const[8];
@@ -89,8 +89,8 @@ sphere_t* createSceneStruct(float angle, cudaStream_t stream) {
     cudaMalloc(&scene_gpu, sizeof(sphere_t) * (size+1)+sizeof(disk_t));
 
     scene[0] = sphere_t{ { 0,0,0 }, 0.2f, { 0,0,0 } , 0.0025f };
-    scene[1] = sphere_t{ vec3_t{ -.8f * cosf(angle) , .8f * sinf(angle), 0 }, 0.1f, { 1,1,.8f }, 0 };
-    scene[2] = sphere_t{ vec3_t{ 0.95f,0,0 }, 0.05f, {.9f ,1, 1 }, 0 };
+    scene[1] = sphere_t{ vec3_t{ -.8f * cosf(angle) , .8f * sinf(angle), 0, 0 }, 0.1f, { 1,1,.8f }, 0 };
+    scene[2] = sphere_t{ vec3_t{ 0.95f,0,0, 0}, 0.05f, {.9f ,1, 1 }, 0 };
 
     *(disk_t*)(scene + 3) = disk_t{ {0,0,0}, 0.25f, 0.6f, {1,1,1} ,{0,0,1} };
 
@@ -106,8 +106,8 @@ void createSceneInConstant(float angle, cudaStream_t stream, camera_t *cam) {
     cudaMallocHost(&scene, sizeof(sphere_t) * size + sizeof(disk_t));
 
     scene[0] = sphere_t{ { 0,0,0 }, 0.2f, { 0,0,0 } , 0.0025f };
-    scene[1] = sphere_t{ vec3_t{ -.8f * cosf(angle) , .8f * sinf(angle), 0 }, 0.1f, { 1,1,.8f }, 0 };
-    scene[2] = sphere_t{ vec3_t{ 0.95f,0,0 }, 0.05f, {.9f ,1, 1 }, 0 };
+    scene[1] = sphere_t{ vec3_t{ -.8f * cosf(angle) , .8f * sinf(angle), 0, 0 }, 0.1f, { 1,1,.8f }, 0 };
+    scene[2] = sphere_t{ vec3_t{ 0.95f,0,0,0 }, 0.05f, {.9f ,1, 1 }, 0 };
     *(disk_t*)(scene + size) = disk_t{ {0,0,0}, 0.25f, 0.6f, {1,1,1} ,{0,0,1} };
 
     cudaMemcpyToSymbolAsync(test_const, scene, sizeof(sphere_t) * size + sizeof(disk_t),0, cudaMemcpyHostToDevice, stream);
@@ -124,9 +124,10 @@ void freeScene(sphere_t* scene) {
 
 
 cv::cuda::GpuMat gpu_img;
+//BASELINE  
 cv::Mat renderScene(cv::cuda::GpuMat hdri, int img_w, int img_h, float& angle, sphere_t* scene, disk_t* disk, camera_t* cam) {
-    cv::Mat3f img(img_h, img_w);
-    if(gpu_img.empty())
+    cv::Mat4f img(img_h, img_w);
+    if (gpu_img.empty())
         gpu_img.upload(img);
 
     dim3 grid_size(img_w / 16, img_h / 8);
@@ -144,28 +145,25 @@ cv::Mat renderScene(cv::cuda::GpuMat hdri, int img_w, int img_h, float& angle, s
     return img;
 }
 
+//SHARED
 cv::Mat renderScene(cv::cuda::GpuMat hdri, int img_w, int img_h, float& angle) {
-    cv::Mat3f img(img_h, img_w);
-    //cv::cuda::GpuMat gpu_img;
+    cv::Mat4f img(img_h, img_w);
     if (gpu_img.empty())
         gpu_img.upload(img);
 
-    dim3 grid_size(img_w / 16, img_h / 8);
+    dim3 grid_size(img_w /16, img_h / 8);
     dim3 block_size(16, 8);
 
     render_shared <<< grid_size, block_size >>> (gpu_img, hdri, img_w, img_h,  2);
-    //render_base << < grid_size, block_size >> > (gpu_img, hdri, img_w, img_h, cam_gpu, scene, 2, (disk_t*)disk);
-    //printf("%s \n", cudaGetErrorString(cudaGetLastError()));
 
-    //cudaDeviceSynchronize();
     gpu_img.download(img);
-    //cudaFree(cam_gpu);
-    //freeScene(scene, 2);
+
     return img;
 }
 
+//CONST
 cv::Mat renderSceneConst(cv::cuda::GpuMat hdri, int img_w, int img_h, float& angle) {
-    cv::Mat3f img(img_h, img_w);
+    cv::Mat4f img(img_h, img_w);
     //cv::cuda::GpuMat gpu_img;
     //cv::cuda::GpuMat gpu_hdr;
 
@@ -175,9 +173,8 @@ cv::Mat renderSceneConst(cv::cuda::GpuMat hdri, int img_w, int img_h, float& ang
     if (gpu_img.empty())
         gpu_img.upload(img);
 
-    dim3 grid_size(img_w /2,  img_h / 64);
-    dim3 block_size(2, 64);
-
+    dim3 grid_size(img_w /16,  img_h / 8);
+    dim3 block_size(16, 8);
 
     //cudaMalloc(&cam_gpu, sizeof(camera_t));
     //cudaMemcpy(cam_gpu, cam, sizeof(camera_t), cudaMemcpyHostToDevice); //SHARED

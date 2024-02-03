@@ -6,4 +6,4 @@
 #include "opencv2/imgcodecs.hpp"
 
 using namespace cv;
-cv::Mat3f read_exr();
+cv::Mat4f read_exr();

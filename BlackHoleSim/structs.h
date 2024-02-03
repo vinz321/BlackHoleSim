@@ -12,12 +12,11 @@
 #define PI 3.1415f
 
 
-typedef struct _vec3 {
+typedef struct  _vec3 {
 	float x;
 	float y;
 	float z;
-
-
+	float a;
 } vec3_t;
 
 typedef struct _color {
@@ -27,7 +26,7 @@ typedef struct _color {
 	float a;
 } color_t;
 
-typedef struct _sphere { //32B
+typedef struct __align__(64) _sphere { //32B
 	vec3_t position;
 	float radius;
 	vec3_t color;
@@ -41,7 +40,7 @@ typedef struct __align__(64)  _disk { //64B
 	vec3_t normal;
 } disk_t;
 
-typedef struct __align__(128) _ray { //12B
+typedef struct __align__(32) _ray { //24B
 	vec3_t orig;
 	vec3_t dir;
 } ray_t;

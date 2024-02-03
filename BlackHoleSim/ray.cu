@@ -67,9 +67,10 @@ __device__ vec3_t ray::march(sphere_t* obj_ls, sphere_t* blackhole, int count, d
 	return color;
 	}
 
+//SHARED
 __device__ vec3_t march(ray_t* r, cv::cuda::PtrStepSz<vec3_t> hdr, sphere_t* obj_ls, sphere_t* blackhole, int count, disk_t* disk) {
 	//vec3_t next_orig;
-	vec3_t color = { -1,-1,-1 };
+	vec3_t color = { -1,-1,-1, 0 };
 	vec3_t r_g = blackhole->position - r->orig;
 	float d = r_g * r_g;
 	/*vec3_t t = cross(r->dir, norm(blackhole->position - r->orig));
@@ -113,6 +114,7 @@ __device__ vec3_t march(ray_t* r, cv::cuda::PtrStepSz<vec3_t> hdr, sphere_t* obj
 	return color;
 }
 
+//OTHERS
 __device__ vec3_t march(ray_t& r, cv::cuda::PtrStepSz<vec3_t> hdr, sphere_t* obj_ls, sphere_t* blackhole, int count, disk_t* disk) {
 	//vec3_t next_orig;
 	vec3_t color;
