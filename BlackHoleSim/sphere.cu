@@ -18,10 +18,3 @@
 	 col = sphere.color;
 	 return true;
  }
-
-__host__ __device__ float get_deflection(sphere_t& sphere, vec3_t point) {
-	vec3_t dist_vec = point - sphere.position;
-	float dist = sqrt(dist_vec * dist_vec);
-
-	return (GRAV_LIGHT_CONST * sphere.mass) / dist;
-}

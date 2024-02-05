@@ -27,8 +27,8 @@ int main() {
 	cudaEventCreate(&start);
 	cudaEventCreate(&end);
 
-	//BASELINE
-	sphere_t* scene = createSceneStruct(0, mem_stream);
+	////BASELINE
+	//sphere_t* scene = createSceneStruct(0, mem_stream);
 
 	cam_pos = vec3_t{ 0, 0, 0 };
 	cam_dir = vec3_t{ 0, 0, 1 };
@@ -47,18 +47,17 @@ int main() {
 		cam_dir = norm(vec3_t{0,0,0} - cam_pos);
 		camera_t cam = make_cam(cam_pos, cam_dir, vec3_t{ 0,0,1}, 60, (float)img_w / img_h);
 
-		//BASELINE (REMOVE BASELINE COMMENT OUTSIDE LOOP)
-		scene = createSceneStruct(angle, mem_stream);
-		cv::Mat m = renderScene(hdri, img_w, img_h, angle, scene, (disk_t *)(scene + 3), &cam); 
+		//BASELINE (CHECK BASELINE COMMENT OUTSIDE LOOP)
+		/*scene = createSceneStruct(angle, mem_stream);
+		cv::Mat m = renderScene(hdri, img_w, img_h, angle, scene, (disk_t *)(scene + 3), &cam); */
 
 		//CONSTANT
 		/*createSceneInConstant(2 * angle, mem_stream, &cam);
 		cv::Mat m = renderSceneConst(hdri, img_w, img_h, angle);*/
 
 		//SHARED
-		/*createSceneInConstant(2 * angle, mem_stream, &cam);
-		cv::Mat m = renderScene(hdri, img_w, img_h, angle);*/
-
+		createSceneInConstant(2 * angle, mem_stream, &cam);
+		cv::Mat m = renderScene(hdri, img_w, img_h, angle);
 
 		cudaEventRecord(end);
 		
