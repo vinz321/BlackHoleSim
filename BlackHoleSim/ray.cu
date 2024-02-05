@@ -6,7 +6,7 @@ __device__ vec3_t march(ray_t* r, cv::cuda::PtrStepSz<vec3_t> hdr, sphere_t* obj
 	vec3_t r_g = blackhole->position - r->orig;
 	float d = r_g * r_g;
 	bool done = false;
-	#pragma unroll 4
+
 	for (int i = 0; i < N_STEPS; i++) {
 
 		r->orig = r->orig + DELTA * r->dir;
