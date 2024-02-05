@@ -17,7 +17,6 @@ typedef struct _vec3 {
 	float y;
 	float z;
 
-
 } vec3_t;
 
 typedef struct _color {

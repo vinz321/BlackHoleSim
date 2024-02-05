@@ -1,17 +1,5 @@
 #include "sphere.h"
 
-__device__ bool sphere::is_inside (vec3_t point,vec3_t& color) {
-	float a, b, c;
-	a = orig.x - point.x;
-	b = orig.y - point.y;
-	c = orig.z - point.z;
-	if((a * a + b * b + c * c) > radius_sqr)
-		return false;
-	
-	color = this->col;
-	return true;
-}
-
  __device__ bool is_inside(sphere_t& sphere, vec3_t point, vec3_t &col){
 	vec3_t a;
 	float sqr_rad = sphere.radius * sphere.radius;

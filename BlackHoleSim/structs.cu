@@ -7,11 +7,6 @@ __host__ __device__ vec3_t operator+ (const vec3_t& x, const vec3_t& y) {
 	float b = x.y + y.y;
 	float c = x.z + y.z;
 	return vec3_t{ a,b,c };
-
-	//return vec3_t{ x.x + y.x,
-	//	x.y + y.y,
-
-	//	x.z + y.z };
 }
 
 __host__ __device__ float operator* (const vec3_t& x, const vec3_t& y) {
@@ -20,10 +15,8 @@ __host__ __device__ float operator* (const vec3_t& x, const vec3_t& y) {
 	a = x.z * y.z + a;
 
 	return a;
-	//return x.x * y.x +
-	//	x.y * y.y +
-	//	x.z * y.z;
 }
+
 __host__ __device__ vec3_t operator* (const float& y, const vec3_t& x) {
 	return vec3_t{ x.x * y,x.y * y, x.z * y };
 }
@@ -34,9 +27,6 @@ __host__ __device__ vec3_t operator- (const vec3_t& x, const vec3_t& y) {
 	float c = x.z - y.z;
 
 	return vec3_t{ a,b,c };
-	/*return vec3_t{ x.x ,
-		x.y - y.y,
-		x.z - y.z };*/
 }
 
 __host__ __device__ vec3_t operator/ (const vec3_t& x, const float& y) {
@@ -51,9 +41,11 @@ __host__ __device__ float mul_add(const vec3_t& x, const vec3_t& y, float c) {
 	a = x.x * y.x + a;
 	return a;
 }
+
 __host__ __device__ vec3_t norm(const vec3_t& v) {
 	return v / sqrtf(v * v);
 }
+
 __host__ __device__ vec3_t cross(const vec3_t& x, const vec3_t& y) {
 	float a=x.y* y.z - x.z * y.y;
 	float b = -(x.x * y.z - x.z * y.x);
@@ -72,7 +64,6 @@ __host__ __device__ vec3_t rotate(const vec3_t& x, const vec3_t& k, float theta)
 	vec3_t c = b * k;
 	
 	return a+c;
-	//return cos * x + sin * cross(k, x) + (k * x) * (1 - cos) * k;
 }
 
 __host__ __device__ bool hit_disk(disk_t& disk, vec3_t& point, vec3_t& dir, vec3_t& color) {

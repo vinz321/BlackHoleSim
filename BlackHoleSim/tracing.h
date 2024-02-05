@@ -10,8 +10,6 @@
 #include "structs.h"
 #include "camera.h"
 
-__device__ vec3_t color(ray r);
-
 cv::Mat renderScene(cv::cuda::GpuMat hdri, int img_w, int img_h, float& angle, sphere_t *scene, disk_t* disk, camera_t *cam); // BASELINE
 cv::Mat renderScene(cv::cuda::GpuMat hdri,int img_w, int img_h, float& angle); // SHARED
 cv::Mat renderSceneConst(cv::cuda::GpuMat hdri, int img_w, int img_h, float& angle); // CONSTANT
